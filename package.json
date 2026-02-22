@@ -1,0 +1,27 @@
+{
+  "name": "project1",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/PCHINNI05/IGME430_Project1#readme",
+  "bugs": {
+    "url": "https://github.com/PCHINNI05/IGME430_Project1/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PCHINNI05/IGME430_Project1.git"
+  },
+  "license": "UNLICENSED",
+  "author": "Praneel Chinni",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests complete\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.1",
+    "globals": "^17.3.0"
+  }
+}
