@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pokemon API Test</title>
+</head>
+<body>
+	<h1>Pokemon API Test</h1>
+
+	<button id="loadAll">Load All Pokemon</button>
+	<button id="loadFire">Load Fire Pokemon</button>
+
+	<pre id="output"></pre>
+
+	<script>
+		const output = document.getElementById('output');
+
+		document.getElementById('loadAll').addEventListener('click', async () => {
+			const res = await fetch('/pokemon');
+			const data = await res.json();
+			output.textContent = JSON.stringify(data, null, 2);
+		});
+
+		document.getElementById('loadFire').addEventListener('click', async () => {
+			const res = await fetch('/pokemon?type=Fire');
+			const data = await res.json();
+			output.textContent = JSON.stringify(data, null, 2);
+		});
+	</script>
+</body>
+</html>
