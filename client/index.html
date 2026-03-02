@@ -1,82 +1,290 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>Pokemon API Test</title>
+	<meta charset="UTF-8">
+	<title>Pokemon API Interface</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 40px;
+			background-color: #f4f4f4;
+		}
+
+		h1 {
+			margin-bottom: 10px;
+		}
+
+		.controls {
+			margin-bottom: 20px;
+		}
+
+		select, button, input {
+			padding: 6px;
+			margin-right: 10px;
+			margin-top: 5px;
+		}
+
+		#results {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+			gap: 15px;
+		}
+
+		.card {
+			background: white;
+			padding: 15px;
+			border-radius: 6px;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+			text-align: center;
+		}
+
+		.card img {
+			width: 100px;
+			height: 100px;
+			object-fit: contain;
+		}
+
+		.types {
+			margin-top: 5px;
+			font-size: 14px;
+			color: #555;
+		}
+
+		form {
+			margin-top: 25px;
+			margin-bottom: 25px;
+		}
+	</style>
 </head>
 <body>
-	<h1>Pokemon API Test</h1>
 
-	<label for="type1">Select a primary type:</label>
+	<h1>Pokemon API</h1>
 
-	<select name="primary_type" id="type1">
-		<option value="null">-- select --</option>
-		<option value="normal">Normal</option>
-		<option value="fire">Fire</option>
-		<option value="water">Water</option>
-		<option value="electric">Electric</option>
-		<option value="grass">Grass</option>
-		<option value="ice">Ice</option>
-		<option value="fighting">Fighting</option>
-		<option value="poison">Poison</option>
-		<option value="ground">Ground</option>
-		<option value="flying">Flying</option>
-		<option value="psychic">Psychic</option>
-		<option value="bug">Bug</option>
-		<option value="rock">Rock</option>
-		<option value="ghost">Ghost</option>
-		<option value="dragon">Dragon</option>
-	</select>
+	<h2>Filter Pokemon</h2>
+	<div class="controls">
+		<label for="primaryType">Primary Type:</label>
+		<select id="primaryType">
+			<option value="">Primary Type</option>
+			<option value="Normal">Normal</option>
+			<option value="Fire">Fire</option>
+			<option value="Water">Water</option>
+			<option value="Electric">Electric</option>
+			<option value="Grass">Grass</option>
+			<option value="Ice">Ice</option>
+			<option value="Fighting">Fighting</option>
+			<option value="Poison">Poison</option>
+			<option value="Ground">Ground</option>
+			<option value="Flying">Flying</option>
+			<option value="Psychic">Psychic</option>
+			<option value="Bug">Bug</option>
+			<option value="Rock">Rock</option>
+			<option value="Ghost">Ghost</option>
+			<option value="Dragon">Dragon</option>
+		</select>
 
-	<label for="type2">Select a secondary type:</label>
+		<label for="secondaryType">Secondary Type:</label>
+		<select id="secondaryType">
+			<option value="">Secondary Type</option>
+			<option value="Normal">Normal</option>
+			<option value="Fire">Fire</option>
+			<option value="Water">Water</option>
+			<option value="Electric">Electric</option>
+			<option value="Grass">Grass</option>
+			<option value="Ice">Ice</option>
+			<option value="Fighting">Fighting</option>
+			<option value="Poison">Poison</option>
+			<option value="Ground">Ground</option>
+			<option value="Flying">Flying</option>
+			<option value="Psychic">Psychic</option>
+			<option value="Bug">Bug</option>
+			<option value="Rock">Rock</option>
+			<option value="Ghost">Ghost</option>
+			<option value="Dragon">Dragon</option>
+		</select>
 
-	<select name="secondary_type" id="type2">
-		<option value="null">-- select --</option>
-		<option value="normal">Normal</option>
-		<option value="fire">Fire</option>
-		<option value="water">Water</option>
-		<option value="electric">Electric</option>
-		<option value="grass">Grass</option>
-		<option value="ice">Ice</option>
-		<option value="fighting">Fighting</option>
-		<option value="poison">Poison</option>
-		<option value="ground">Ground</option>
-		<option value="flying">Flying</option>
-		<option value="psychic">Psychic</option>
-		<option value="bug">Bug</option>
-		<option value="rock">Rock</option>
-		<option value="ghost">Ghost</option>
-		<option value="dragon">Dragon</option>
-	</select>
+		<button id="filterBtn">Filter</button>
+		<button id="resetBtn">Reset</button>
+	</div>
 
-	<button id="load">Load Filtered Pokemon</button>
+	<h2>Add/Edit Pokemon</h2>
+	<form id="addForm">
+		<input type="text" id="newName" placeholder="Name" required>
 
-	<pre id="output"></pre>
+		<select id="newPrimaryType" required>
+			<option value="">Primary Type</option>
+			<option value="Normal">Normal</option>
+			<option value="Fire">Fire</option>
+			<option value="Water">Water</option>
+			<option value="Electric">Electric</option>
+			<option value="Grass">Grass</option>
+			<option value="Ice">Ice</option>
+			<option value="Fighting">Fighting</option>
+			<option value="Poison">Poison</option>
+			<option value="Ground">Ground</option>
+			<option value="Flying">Flying</option>
+			<option value="Psychic">Psychic</option>
+			<option value="Bug">Bug</option>
+			<option value="Rock">Rock</option>
+			<option value="Ghost">Ghost</option>
+			<option value="Dragon">Dragon</option>
+		</select>
+
+		<select id="newSecondaryType">
+			<option value="">Secondary Type</option>
+			<option value="Normal">Normal</option>
+			<option value="Fire">Fire</option>
+			<option value="Water">Water</option>
+			<option value="Electric">Electric</option>
+			<option value="Grass">Grass</option>
+			<option value="Ice">Ice</option>
+			<option value="Fighting">Fighting</option>
+			<option value="Poison">Poison</option>
+			<option value="Ground">Ground</option>
+			<option value="Flying">Flying</option>
+			<option value="Psychic">Psychic</option>
+			<option value="Bug">Bug</option>
+			<option value="Rock">Rock</option>
+			<option value="Ghost">Ghost</option>
+			<option value="Dragon">Dragon</option>
+		</select>
+
+		<input type="text" id="newImg" placeholder="Image URL">
+
+		<button type="submit">Modify</button>
+	</form>
+
+	<div id="results"></div>
 
 	<script>
-		const output = document.getElementById('output');
+		const primarySelect = document.getElementById('primaryType');
+		const secondarySelect = document.getElementById('secondaryType');
+		const filterBtn = document.getElementById('filterBtn');
+		const resetBtn = document.getElementById('resetBtn');
+		const resultsDiv = document.getElementById('results');
+		const addForm = document.getElementById('addForm');
 
-		document.getElementById('load').addEventListener('click', async () => {
-			const primaryType = document.getElementById('type1').value;
-			const secondaryType = document.getElementById('type2').value;
+		const fetchAllPokemon = async () => {
+			const response = await fetch('/pokemon', {
+				method: 'GET',
+				headers: { 'Accept': 'application/json' }
+			});
+			return response.json();
+		};
 
-			let url = '/pokemon';
-			if (primaryType !== 'null') {
-				url += `?primary_type=${primaryType}`;
+		const displayPokemon = (pokemonList) => {
+			resultsDiv.innerHTML = '';
+
+			if (!pokemonList.length) {
+				resultsDiv.textContent = 'No Pokemon found.';
+				return;
 			}
-			if (secondaryType !== 'null') {
-				url += `${url.includes('?') ? '&' : '?'}secondary_type=${secondaryType}`;
+
+			pokemonList.forEach(p => {
+				const card = document.createElement('div');
+				card.className = 'card';
+
+				card.innerHTML = `
+					<h3>${String(p.id).padStart(3, '0')}. ${p.name}</h3>
+					<img src="${p.img || 'https://via.placeholder.com/100'}" alt="${p.name}">
+					<div class="types">Types: ${p.type.join(', ')}</div>
+				`;
+
+				resultsDiv.appendChild(card);
+			});
+		};
+
+		const filterPokemon = async () => {
+			const primary = primarySelect.value.toLowerCase();
+			const secondary = secondarySelect.value.toLowerCase();
+
+			let pokemonList = await fetchAllPokemon();
+
+			if (primary) {
+				pokemonList = pokemonList.filter(p =>
+					p.type.some(t => t.toLowerCase() === primary)
+				);
 			}
-			console.log('Fetching from URL:', url);
-			const res = await fetch(url);
-			const data = await res.json();
-			output.textContent = JSON.stringify(data, null, 2);
+
+			if (secondary) {
+				pokemonList = pokemonList.filter(p =>
+					p.type.some(t => t.toLowerCase() === secondary)
+				);
+			}
+
+			displayPokemon(pokemonList);
+		};
+
+		const resetFilters = async () => {
+			primarySelect.value = '';
+			secondarySelect.value = '';
+			const pokemonList = await fetchAllPokemon();
+			displayPokemon(pokemonList);
+		};
+
+		addForm.addEventListener('submit', async (e) => {
+			e.preventDefault();
+
+			const name = document.getElementById('newName').value.trim();
+			const primaryType = document.getElementById('newPrimaryType').value;
+			const secondaryType = document.getElementById('newSecondaryType').value;
+			const img = document.getElementById('newImg').value.trim();
+
+			const types = secondaryType
+				? [primaryType, secondaryType]
+				: [primaryType];
+
+			const existingPokemon = await fetchAllPokemon();
+
+			const found = existingPokemon.find(
+				(p) => p.name.toLowerCase() === name.toLowerCase()
+			);
+
+			if (found) {
+				// Build edit body dynamically
+				const editBody = {
+					id: found.id,
+					name,
+					type: types
+				};
+
+				// Only include img if user provided one
+				if (img) {
+					editBody.img = img;
+				}
+
+				await fetch('/editPokemon', {
+					method: 'POST',
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(editBody)
+				});
+			} else {
+				// Add new Pokémon
+				await fetch('/addPokemon', {
+					method: 'POST',
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						name,
+						type: types,
+						img: img || null
+					})
+				});
+			}
+
+			addForm.reset();
+			resetFilters();
 		});
 
-		document.getElementById('loadFire').addEventListener('click', async () => {
-			const res = await fetch('/pokemon?type=Fire');
-			const data = await res.json();
-			output.textContent = JSON.stringify(data, null, 2);
-		});
+		filterBtn.addEventListener('click', filterPokemon);
+		resetBtn.addEventListener('click', resetFilters);
+
+		fetchAllPokemon().then(displayPokemon);
 	</script>
+
 </body>
 </html>

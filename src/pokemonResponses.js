@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const querystring = require('querystring');
 
 const jsonHandler = require('./jsonResponses.js');
 
@@ -8,28 +7,29 @@ const jsonHandler = require('./jsonResponses.js');
 const rawData = fs.readFileSync(path.resolve(__dirname, '../data/pokedex.json'));
 let pokemonData = JSON.parse(rawData);
 
-// GET /pokemon
+/*
+	GET /pokemon
+	Supports optional filtering by type and name
+*/
 const getPokemon = (request, response, query) => {
 	let results = pokemonData;
 
-	// filter by type if provided
 	if (query.type) {
 		results = results.filter((p) => p.type.includes(query.type));
 	}
 
-	// filter by name if provided
 	if (query.name) {
-		results = results.filter((p) => p.name.toLowerCase() === query.name.toLowerCase());
+		results = results.filter(
+			(p) => p.name.toLowerCase() === query.name.toLowerCase(),
+		);
 	}
 
-	jsonHandler.respondJSON(request, response, 200, results);
+	return jsonHandler.respondJSON(request, response, 200, results);
 };
 
-const getPokemonMeta = (request, response, query) => {
-	getPokemon(request, response, query);
-};
-
-// GET /pokemonById?id=25
+/*
+	GET /pokemonById?id=#
+*/
 const getPokemonById = (request, response, query) => {
 	if (!query.id) {
 		return jsonHandler.respondJSON(request, response, 400, {
@@ -37,7 +37,9 @@ const getPokemonById = (request, response, query) => {
 		});
 	}
 
-	const found = pokemonData.find((p) => p.id === parseInt(query.id, 10));
+	const found = pokemonData.find(
+		(p) => p.id === parseInt(query.id, 10),
+	);
 
 	if (!found) {
 		return jsonHandler.respondJSON(request, response, 404, {
@@ -45,14 +47,12 @@ const getPokemonById = (request, response, query) => {
 		});
 	}
 
-	jsonHandler.respondJSON(request, response, 200, found);
+	return jsonHandler.respondJSON(request, response, 200, found);
 };
 
-const getPokemonByIdMeta = (request, response, query) => {
-	getPokemonById(request, response, query);
-};
-
-// GET /types
+/*
+	GET /types
+*/
 const getTypes = (request, response) => {
 	const types = new Set();
 
@@ -60,113 +60,92 @@ const getTypes = (request, response) => {
 		p.type.forEach((t) => types.add(t));
 	});
 
-	jsonHandler.respondJSON(request, response, 200, Array.from(types));
+	return jsonHandler.respondJSON(
+		request,
+		response,
+		200,
+		Array.from(types),
+	);
 };
 
-const getTypesMeta = (request, response) => {
-	getTypes(request, response);
-};
-
-// GET /stats
+/*
+	GET /stats
+*/
 const getStats = (request, response) => {
 	const stats = {
 		totalPokemon: pokemonData.length,
 	};
 
-	jsonHandler.respondJSON(request, response, 200, stats);
+	return jsonHandler.respondJSON(request, response, 200, stats);
 };
 
-const getStatsMeta = (request, response) => {
-	getStats(request, response);
-};
-
-// POST /addPokemon
+/*
+	POST /addPokemon
+	Now supports optional img field
+*/
 const addPokemon = (request, response) => {
-	let body = '';
+	const { name, type, img } = request.body;
 
-	request.on('data', (chunk) => {
-		body += chunk;
-	});
+	if (!name || !type) {
+		return jsonHandler.respondJSON(request, response, 400, {
+			message: 'name and type are required',
+		});
+	}
 
-	request.on('end', () => {
-		let parsedBody;
+	const newPokemon = {
+		id: pokemonData.length + 1,
+		name,
+		type: Array.isArray(type) ? type : [type],
+		img: img || null, // optional image support
+	};
 
-		if (request.headers['content-type'] === 'application/json') {
-			parsedBody = JSON.parse(body);
-		} else {
-			parsedBody = querystring.parse(body);
-		}
+	pokemonData.push(newPokemon);
 
-		if (!parsedBody.name || !parsedBody.type) {
-			return jsonHandler.respondJSON(request, response, 400, {
-				message: 'name and type are required',
-			});
-		}
-
-		const newPokemon = {
-			id: pokemonData.length + 1,
-			name: parsedBody.name,
-			type: Array.isArray(parsedBody.type) ? parsedBody.type : [parsedBody.type],
-		};
-
-		pokemonData.push(newPokemon);
-
-		jsonHandler.respondJSON(request, response, 201, newPokemon);
-	});
+	return jsonHandler.respondJSON(request, response, 201, newPokemon);
 };
 
-// POST /editPokemon
+/*
+	POST /editPokemon
+	Now supports editing img
+*/
 const editPokemon = (request, response) => {
-	let body = '';
+	const { id, name, type, img } = request.body;
 
-	request.on('data', (chunk) => {
-		body += chunk;
-	});
+	if (!id) {
+		return jsonHandler.respondJSON(request, response, 400, {
+			message: 'id is required',
+		});
+	}
 
-	request.on('end', () => {
-		let parsedBody;
+	const pokemon = pokemonData.find(
+		(p) => p.id === parseInt(id, 10),
+	);
 
-		if (request.headers['content-type'] === 'application/json') {
-			parsedBody = JSON.parse(body);
-		} else {
-			parsedBody = querystring.parse(body);
-		}
+	if (!pokemon) {
+		return jsonHandler.respondJSON(request, response, 404, {
+			message: 'Pokemon not found',
+		});
+	}
 
-		if (!parsedBody.id) {
-			return jsonHandler.respondJSON(request, response, 400, {
-				message: 'id is required',
-			});
-		}
+	if (name) pokemon.name = name;
 
-		const pokemon = pokemonData.find((p) => p.id === parseInt(parsedBody.id, 10));
+	if (type) {
+		pokemon.type = Array.isArray(type) ? type : [type];
+	}
 
-		if (!pokemon) {
-			return jsonHandler.respondJSON(request, response, 404, {
-				message: 'Pokemon not found',
-			});
-		}
+	if (img !== undefined) {
+		pokemon.img = img;
+	}
 
-		if (parsedBody.name) pokemon.name = parsedBody.name;
-		if (parsedBody.type) {
-			pokemon.type = Array.isArray(parsedBody.type)
-				? parsedBody.type
-				: [parsedBody.type];
-		}
-
-		response.writeHead(204);
-		response.end();
-	});
+	response.writeHead(204);
+	return response.end();
 };
 
 module.exports = {
 	getPokemon,
-	getPokemonMeta,
 	getPokemonById,
-	getPokemonByIdMeta,
 	getTypes,
-	getTypesMeta,
 	getStats,
-	getStatsMeta,
 	addPokemon,
 	editPokemon,
 };
