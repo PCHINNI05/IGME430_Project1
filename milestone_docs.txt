@@ -1,0 +1,34 @@
+IGME 430 – Project 1
+Milestone Documentation
+Name: Praneel Chinni
+
+
+What dataset are you using?
+
+I am using a Pokémon Pokedex dataset stored in a file named pokedex.json. The dataset contains information about the original 
+151 Pokémon, including fields such as id, number, name, image URL, type, height, weight, weaknesses, and next evolutions. 
+
+
+What work has been completed for this milestone?
+
+For this milestone, I completed the core API functionality in my Node.js server, specifically:
+- The server loads the pokedex.json file into memory at startup and parses it into a JavaScript object
+- I implemented four GET endpoints:
+    - GET /pokemon (returns all Pokémon, with optional filtering by query parameters such as type or name)
+    - GET /pokemonById (returns a single Pokémon by id using a query parameter)
+    - GET /types (returns all unique Pokémon types)
+    - GET /stats (returns basic dataset statistics, such as total number of Pokémon)
+    - All GET endpoints also support HEAD requests.
+- I implemented two POST endpoints:
+    - POST /addPokemon (adds a new Pokémon to the in-memory dataset)
+    - POST /editPokemon (edits an existing Pokémon by id)
+- The server uses the required status codes
+- ESLint is configured and the project runs without runtime or linting errors.
+
+
+What work is left, and how do you plan to complete it?
+
+The remaining work primarily involves the client-facing portion, specifically:
+- Creating a main HTML page that allows users to interact with the API without writing code
+- Building a separate API documentation page 
+- Performing additional testing for edge-case handling
