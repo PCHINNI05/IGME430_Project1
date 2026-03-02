@@ -1,0 +1,18 @@
+IGME 430 – Project 1
+Final Submission Documentation
+Name: Praneel Chinni
+
+What dataset are you using?
+I am using a Pokemon Pokedex dataset stored in a file named pokedex.json. The dataset contains information about the original 
+151 Pokemon, including fields such as id, number, name, image URL, type, height, weight, weaknesses, and next evolutions. 
+
+What functionality has been completed for the final submission?
+For the final submission, I completed both the server-side API and the full client-facing interface. On the server side, the application loads pokedex.json into memory at startup. I implemented four GET endpoints: GET /pokemon (returns all Pokemon with optional filtering by query parameters such as type or name), GET /pokemonById (returns a single Pokemon by id using a query parameter), GET /types (returns all unique Pokemon types), and GET /stats (returns basic dataset statistics such as the total number of Pokemon). All GET endpoints also support HEAD requests. I implemented two POST endpoints: POST /addPokemon (adds a new Pokemon to the dataset) and POST /editPokemon (edits an existing Pokemon by id). POST requests support both application/json and application/x-www-form-urlencoded content types. The required HTTP status codes (200, 201, 204, 400, 404) are used appropriately, and all responses include proper Content-Type and Content-Length headers. Invalid routes return a structured JSON 404 response.
+
+On the client side, I created a main interface that allows users to view all Pokemon, filter Pokemon using two dropdowns for primary and secondary types, add new Pokemon, and edit existing Pokemon using the same form. The form uses fetch() to send API requests and prevents the default form submission behavior. All client requests include appropriate Accept and Content-Type headers where applicable. Pokemon IDs are formatted with zero padding. I also created a separate API documentation page that describes all endpoints, parameters, and example responses.
+
+What above-and-beyond work was completed?
+For additional polish and improved user experience, I implemented dual-type filtering so users can filter Pokemon that match both a primary and secondary type. The add form also functions as an edit form; if a Pokemon with the same name already exists, the server updates the existing Pokemon instead of creating a duplicate. The image field is optional during editing, and if left blank, the existing image remains unchanged. The interface uses styled card layouts for a more polished visual presentation.
+
+What challenges did you encounter?
+One challenge was properly handling dual-type filtering while keeping compatibility with the existing API endpoints. Another challenge was implementing edit functionality without duplicating form logic and ensuring that image data was only updated when provided. Care was taken to ensure correct HTTP status codes were returned and that both JSON and URL-encoded request bodies were parsed correctly.
