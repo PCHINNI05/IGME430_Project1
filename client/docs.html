@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Pokemon API Documentation</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			margin: 40px;
+			background-color: #f4f4f4;
+			line-height: 1.6;
+		}
+
+		h1, h2 {
+			margin-top: 30px;
+		}
+
+		code {
+			background: #eee;
+			padding: 4px 6px;
+			border-radius: 4px;
+			display: inline-block;
+		}
+
+		pre {
+			background: #fff;
+			padding: 15px;
+			border-radius: 6px;
+			overflow-x: auto;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+		}
+
+		.section {
+			background: white;
+			padding: 20px;
+			margin-bottom: 25px;
+			border-radius: 6px;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+		}
+
+		.button {
+			display: inline-block;
+			padding: 8px 12px;
+			background: #333;
+			color: white;
+			text-decoration: none;
+			border-radius: 4px;
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+<body>
+
+	<a href="/" class="button">← Back to App</a>
+
+	<h1>Pokemon API Documentation</h1>
+
+	<p>This API allows users to view, filter, add, and edit Pokemon data.</p>
+
+	<hr>
+
+	<div class="section">
+		<h2>GET /pokemon</h2>
+
+		<p>Returns all Pokemon.</p>
+
+		<h3>Optional Query Parameters:</h3>
+		<ul>
+			<li><code>?type=fire</code> – filters Pokemon by type</li>
+			<li><code>?name=Pikachu</code> – filters by exact name (case-insensitive)</li>
+		</ul>
+
+		<h3>Example Request:</h3>
+		<pre>GET /pokemon?type=grass</pre>
+
+		<h3>Response (200):</h3>
+<pre>[
+  {
+    "id": 1,
+    "name": "Bulbasaur",
+    "type": ["grass", "poison"],
+    "img": "image-url"
+  }
+]</pre>
+	</div>
+
+	<div class="section">
+		<h2>GET /pokemonById</h2>
+
+		<h3>Required Query Parameter:</h3>
+		<ul>
+			<li><code>?id=25</code></li>
+		</ul>
+
+		<h3>Example:</h3>
+		<pre>GET /pokemonById?id=25</pre>
+
+		<h3>Success Response (200):</h3>
+<pre>{
+  "id": 25,
+  "name": "Pikachu",
+  "type": ["electric"],
+  "img": "image-url"
+}</pre>
+
+		<h3>Error (400):</h3>
+<pre>{
+  "message": "id parameter is required"
+}</pre>
+
+		<h3>Error (404):</h3>
+<pre>{
+  "message": "Pokemon not found"
+}</pre>
+	</div>
+
+	<div class="section">
+		<h2>GET /types</h2>
+
+		<p>Returns all unique Pokemon types.</p>
+
+		<h3>Example:</h3>
+		<pre>GET /types</pre>
+
+		<h3>Response (200):</h3>
+<pre>[
+  "normal",
+  "fire",
+  "water",
+  "grass"
+]</pre>
+	</div>
+
+	<div class="section">
+		<h2>GET /stats</h2>
+
+		<p>Returns metadata about the dataset.</p>
+
+		<h3>Example:</h3>
+		<pre>GET /stats</pre>
+
+		<h3>Response:</h3>
+<pre>{
+  "totalPokemon": 151
+}</pre>
+	</div>
+
+	<div class="section">
+		<h2>POST /addPokemon</h2>
+
+		<p>Adds a new Pokemon.</p>
+
+		<h3>Required Fields:</h3>
+		<ul>
+			<li><code>name</code> (string)</li>
+			<li><code>type</code> (array or string)</li>
+		</ul>
+
+		<h3>Optional:</h3>
+		<ul>
+			<li><code>img</code> (string URL)</li>
+		</ul>
+
+		<h3>Example Request Body:</h3>
+<pre>{
+  "name": "Testmon",
+  "type": ["fire", "dragon"],
+  "img": "https://example.com/image.png"
+}</pre>
+
+		<h3>Success (201):</h3>
+<pre>{
+  "id": 152,
+  "name": "Testmon",
+  "type": ["fire", "dragon"],
+  "img": "https://example.com/image.png"
+}</pre>
+
+		<h3>Error (400):</h3>
+<pre>{
+  "message": "name and type are required"
+}</pre>
+	</div>
+
+	<div class="section">
+		<h2>POST /editPokemon</h2>
+
+		<p>Edits an existing Pokemon.</p>
+
+		<h3>Required:</h3>
+		<ul>
+			<li><code>id</code></li>
+		</ul>
+
+		<h3>Optional Fields:</h3>
+		<ul>
+			<li><code>name</code></li>
+			<li><code>type</code></li>
+			<li><code>img</code></li>
+		</ul>
+
+		<h3>Example:</h3>
+<pre>{
+  "id": 25,
+  "type": ["electric", "fighting"]
+}</pre>
+
+		<h3>Success (204):</h3>
+		<p>No response body.</p>
+
+		<h3>Error (404):</h3>
+<pre>{
+  "message": "Pokemon not found"
+}</pre>
+	</div>
+
+</body>
+</html>

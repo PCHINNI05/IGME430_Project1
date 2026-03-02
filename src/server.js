@@ -9,13 +9,16 @@ const jsonHandler = require('./jsonResponses.js');
 const index = fs.readFileSync(
 	path.resolve(__dirname, '../client/index.html')
 );
+const docs = fs.readFileSync(
+	path.resolve(__dirname, '../client/docs.html')
+);
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const parseBody = (request, response, handler) => {
 	const body = [];
 
-	request.on('error', (err) => {
+	request.on('error', () => {
 		response.statusCode = 400;
 		return response.end();
 	});
@@ -54,6 +57,16 @@ const onRequest = (request, response) => {
 		});
 
 		response.write(index);
+		return response.end();
+	}
+
+	// Serve docs page
+	if (parsedUrl.pathname === '/docs.html') {
+		response.writeHead(200, {
+			'Content-Type': 'text/html',
+			'Content-Length': docs.length,
+		});
+		response.write(docs);
 		return response.end();
 	}
 
